@@ -47,7 +47,7 @@ The RAG pipeline ingests ~30-40 knowledge base markdown files from `data/knowled
 - **Demo user is hardcoded** — no auth. User profile: "Alex Rivera", Premium account, balance $12,847.32.
 - **No persistence** — conversations are in-memory, reset on reload/restart is fine.
 - **Chat is a side panel**, not a floating bubble — slides in from the right, overlays 40% width on desktop, fullscreen on mobile.
-- **Dark mode preferred** — near-black `#0A0A0A` primary, accent blue or emerald.
+- **Light theme** — clean white backgrounds, subtle gray borders, emerald accent. Fintech founders expect light UIs (Mercury, Brex defaults).
 - **Agent persona "Nova"** — friendly, professional, concise, uses first name, never reveals it's a demo.
 - **Responses must stay under 100 words** unless explaining a multi-step process.
 - **Escalation triggers:** account closures, complex disputes, unresolvable after 2 attempts.
