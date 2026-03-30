@@ -1,5 +1,7 @@
 import chromadb
 
+from app.types import Chunk
+
 
 def get_collection(collection_name: str = "novapay_kb") -> chromadb.Collection:
     """Initialize Chromadb client and get or create a collection."""
@@ -10,12 +12,12 @@ def get_collection(collection_name: str = "novapay_kb") -> chromadb.Collection:
 
 def store_chunks(
     collection: chromadb.Collection,
-    chunks: list[dict[str, object]],
+    chunks: list[Chunk],
     embeddings: list[list[float]],
 ) -> None:
     """Add chunks to Chromadb collection."""
-    ids = [str(chunk["id"]) for chunk in chunks]
-    documents = [str(chunk["text"]) for chunk in chunks]
+    ids = [chunk["id"] for chunk in chunks]
+    documents = [chunk["text"] for chunk in chunks]
     metadatas = [
         {"source": chunk["source"], "category": chunk["category"]} for chunk in chunks
     ]

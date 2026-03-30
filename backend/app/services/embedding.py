@@ -1,5 +1,7 @@
 from openai import OpenAI
 
+from app.types import Chunk
+
 
 def get_openai_client() -> OpenAI:
     """Initialize the OpenAI client and return it."""
@@ -16,8 +18,8 @@ def embed_texts(texts: list[str], client: OpenAI) -> list[list[float]]:
     return vectors
 
 
-def embed_chunks(chunks: list[dict[str, object]], client: OpenAI) -> list[list[float]]:
+def embed_chunks(chunks: list[Chunk], client: OpenAI) -> list[list[float]]:
     """Embed a list of chunks text."""
-    texts = [str(chunk["text"]) for chunk in chunks]
+    texts = [chunk["text"] for chunk in chunks]
     vectors = embed_texts(texts, client)
     return vectors

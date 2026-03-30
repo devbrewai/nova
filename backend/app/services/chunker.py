@@ -1,5 +1,7 @@
 from pathlib import Path
 
+from app.types import Chunk
+
 
 def estimate_tokens(text: str) -> int:
     """Estimate token count using word-based heuristic."""
@@ -45,7 +47,7 @@ def chunk_document(
     category: str, 
     max_tokens: int, 
     overlap: int
-) -> list[dict[str, object]]:
+) -> list[Chunk]:
     """Group document into chunks."""
     paragraphs = split_into_paragraphs(text)
 
@@ -57,7 +59,7 @@ def chunk_document(
     chunks = []
 
     for i, chunk_text in enumerate(chunk_texts):
-        chunk = {
+        chunk: Chunk = {
             "id": f"{doc_id}-{i:03d}",
             "text": chunk_text,
             "source": source,
@@ -72,7 +74,7 @@ def process_knowledge_base(
     directory_path: str, 
     max_tokens: int, 
     overlap: int
-) -> list[dict[str, object]]:
+) -> list[Chunk]:
     """Process each file in directory and return document chunks."""
     file_path = Path(directory_path).glob("*.md")
 
@@ -92,4 +94,4 @@ if __name__ == "__main__":
     print(f"Total chunks: {len(chunks)}")
     for chunk in chunks[:3]:
         print(f"\n--- {chunk['id']} ---")
-        print(str(chunk["text"])[:200])
+        print(chunk["text"][:200])
