@@ -18,6 +18,6 @@ def embed_texts(texts: list[str], client: OpenAI) -> list[list[float]]:
 
 def embed_chunks(chunks: list[dict[str, object]], client: OpenAI) -> list[list[float]]:
     """Embed a list of chunks text."""
-    texts = [str(chunk["text"] for chunk in chunks)]
+    texts = [str(chunk["text"]) for chunk in chunks]
     vectors = embed_texts(texts, client)
     return vectors
