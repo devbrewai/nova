@@ -1,11 +1,12 @@
 from openai import OpenAI
 
+from app.config import settings
 from app.types import Chunk
 
 
 def get_openai_client() -> OpenAI:
     """Initialize the OpenAI client and return it."""
-    return OpenAI()
+    return OpenAI(api_key=settings.openai_api_key)
 
 
 def embed_texts(texts: list[str], client: OpenAI) -> list[list[float]]:

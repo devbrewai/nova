@@ -9,19 +9,18 @@ Run with: pytest -m integration
 Skip with: pytest -m 'not integration'
 """
 
-import os
-
 import pytest
 from chromadb import Collection
 from openai import OpenAI
 
+from app.config import settings
 from app.services.embedding import get_openai_client
 from app.services.ingestion import ingest
 from app.services.retrieval import retrieve
 from app.services.vector_store import get_collection
 
 requires_openai = pytest.mark.skipif(
-    not os.environ.get("OPENAI_API_KEY"),
+    not settings.openai_api_key,
     reason="OPENAI_API_KEY not set",
 )
 
