@@ -1,13 +1,13 @@
 import time
 import uuid
-from typing import TypedDict
+from typing import Literal, TypedDict
 
 MAX_MESSAGES = 20
 TTL_SECONDS = 30 * 60  # 30 minutes
 
 
 class Message(TypedDict):
-    role: str
+    role: Literal["user", "assistant"]
     content: str
 
 
@@ -18,7 +18,7 @@ class Conversation:
         self.messages: list[Message] = []
         self.last_active: float = time.time()
 
-    def add_message(self, role: str, content: str) -> None:
+    def add_message(self, role: Literal["user", "assistant"], content: str) -> None:
         """Append a message and enforce the sliding window."""
         self.messages.append(Message(role=role, content=content))
         if len(self.messages) > MAX_MESSAGES:
