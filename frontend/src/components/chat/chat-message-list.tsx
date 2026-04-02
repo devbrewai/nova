@@ -1,6 +1,5 @@
 import { useEffect, useRef } from "react";
 import type { ChatMessage as ChatMessageType, ChatStatus } from "@/types";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { ChatMessage } from "./chat-message";
 import { ChatEmptyState } from "./chat-empty-state";
 import { TypingIndicator } from "./typing-indicator";
@@ -27,7 +26,7 @@ export function ChatMessageList({
   }
 
   return (
-    <ScrollArea className="flex-1 px-4">
+    <div className="min-h-0 flex-1 overflow-y-auto px-4">
       <div className="flex flex-col gap-4 py-4">
         {messages.map((msg) => (
           <ChatMessage key={msg.id} message={msg} />
@@ -37,6 +36,6 @@ export function ChatMessageList({
         )}
         <div ref={bottomRef} />
       </div>
-    </ScrollArea>
+    </div>
   );
 }
