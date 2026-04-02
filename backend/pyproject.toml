@@ -21,6 +21,11 @@ dev = [
     "ruff>=0.11.0",
 ]
 
+[tool.pytest.ini_options]
+markers = [
+    "integration: requires OPENAI_API_KEY and real ChromaDB (skip with -m 'not integration')",
+]
+
 [tool.ruff]
 target-version = "py311"
 line-length = 88
