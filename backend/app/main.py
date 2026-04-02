@@ -7,8 +7,10 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.config import settings
 from app.routers import account, chat, health, transactions
+from app.services.conversation import ConversationManager
 from app.services.embedding import get_openai_client
 from app.services.ingestion import ingest
+from app.services.llm import get_anthropic_client
 from app.services.vector_store import get_collection
 
 logger = logging.getLogger(__name__)
@@ -16,7 +18,7 @@ logger = logging.getLogger(__name__)
 
 @asynccontextmanager
 async def lifespan(app: FastAPI) -> AsyncIterator[None]:
-    """Initialize RAG pipeline on startup."""
+    """Initialize RAG pipeline and clients on startup."""
     openai_client = get_openai_client()
     collection = get_collection()
 
@@ -29,6 +31,8 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
 
     app.state.openai_client = openai_client
     app.state.collection = collection
+    app.state.anthropic_client = get_anthropic_client()
+    app.state.conversation_manager = ConversationManager()
 
     yield
 
