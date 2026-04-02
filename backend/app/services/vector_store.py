@@ -1,11 +1,12 @@
 import chromadb
 
+from app.config import settings
 from app.types import Chunk
 
 
 def get_collection(collection_name: str = "novapay_kb") -> chromadb.Collection:
     """Initialize Chromadb client and get or create a collection."""
-    client = chromadb.PersistentClient(path="./chroma_data")
+    client = chromadb.PersistentClient(path=settings.chroma_persist_dir)
     collection = client.get_or_create_collection(name=collection_name)
     return collection
 
@@ -36,5 +37,6 @@ def search(
     results = collection.query(
         query_embeddings=[query_vector],  # type: ignore[arg-type]
         n_results=n_results,
+        include=["documents", "metadatas", "distances"],
     )
     return results

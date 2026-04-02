@@ -7,3 +7,9 @@ class Chunk(TypedDict):
     source: str
     category: str
     chunk_index: int
+
+
+class RetrievalResult(TypedDict):
+    text: str
+    source: str
+    distance: float

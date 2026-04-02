@@ -1,6 +1,7 @@
 from unittest.mock import Mock, patch
 
 from app.services.vector_store import get_collection, search, store_chunks
+from app.types import Chunk
 
 
 def test_get_collection() -> None:
@@ -18,7 +19,7 @@ def test_get_collection() -> None:
 
 def test_store_chunks() -> None:
     mock_collection = Mock()
-    chunks = [
+    chunks: list[Chunk] = [
         {
             "id": "doc-000",
             "text": "chunk one",
@@ -44,11 +45,16 @@ def test_search() -> None:
 
     query_vector = [0.1, 0.2, 0.3]
 
-    mock_collection.query.return_value = {"documents": [["chunk one"]]}
+    mock_collection.query.return_value = {
+        "documents": [["chunk one"]],
+        "distances": [[0.5]],
+        "metadatas": [[{"source": "doc.md"}]],
+    }
 
     search(mock_collection, query_vector, 3)
 
     mock_collection.query.assert_called_once_with(
         query_embeddings=[[0.1, 0.2, 0.3]],
-        n_results=3
+        n_results=3,
+        include=["documents", "metadatas", "distances"],
     )
