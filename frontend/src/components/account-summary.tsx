@@ -3,6 +3,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { mockAccount } from "@/data";
+import { useAnimatedCounter } from "@/hooks/use-animated-counter";
 
 const quickActions = [
   { label: "Add money", icon: Plus, primary: true as const },
@@ -16,11 +17,13 @@ function formatCurrency(amount: number): string {
     style: "currency",
     currency: "USD",
     minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
   }).format(amount);
 }
 
 export function AccountSummary() {
   const changeIsPositive = mockAccount.monthlyChange >= 0;
+  const animatedBalance = useAnimatedCounter(mockAccount.balance, 1200);
 
   return (
     <Card className="border-none shadow-sm ring-1 ring-border/50">
@@ -37,11 +40,11 @@ export function AccountSummary() {
               <Badge variant="secondary" className="font-normal">{mockAccount.tier}</Badge>
             </div>
 
-            <h2 className="font-heading text-5xl font-bold tracking-tighter text-foreground">
-              {formatCurrency(mockAccount.balance)}
+            <h2 className="font-heading text-5xl font-bold tracking-tighter text-foreground tabular-nums">
+              {formatCurrency(animatedBalance)}
             </h2>
 
-            <div className="mt-3 flex items-center gap-2">
+            <div className="mt-3 flex items-center gap-2 animate-in fade-in duration-700 delay-300 fill-mode-backwards">
               <span
                 className={`flex items-center gap-0.5 text-sm font-medium px-2 py-0.5 rounded-md ${
                   changeIsPositive ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"
