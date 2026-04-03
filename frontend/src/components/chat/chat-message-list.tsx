@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react";
+import { AlertCircle, RefreshCw } from "lucide-react";
 import type { ChatMessage as ChatMessageType, ChatStatus } from "@/types";
 import { ChatMessage } from "./chat-message";
 import { ChatEmptyState } from "./chat-empty-state";
@@ -8,12 +9,14 @@ interface ChatMessageListProps {
   messages: ChatMessageType[];
   status: ChatStatus;
   onSuggestedPrompt: (prompt: string) => void;
+  onRetry: () => void;
 }
 
 export function ChatMessageList({
   messages,
   status,
   onSuggestedPrompt,
+  onRetry,
 }: ChatMessageListProps) {
   const bottomRef = useRef<HTMLDivElement>(null);
 
@@ -33,6 +36,19 @@ export function ChatMessageList({
         ))}
         {status === "streaming" && messages[messages.length - 1]?.content === "" && (
           <TypingIndicator />
+        )}
+        {status === "error" && messages.length > 0 && (
+          <div className="flex items-center gap-2 rounded-lg border border-destructive/30 bg-destructive/10 px-3 py-2 text-sm text-destructive animate-in fade-in duration-200">
+            <AlertCircle className="size-4 shrink-0" />
+            <span className="flex-1">Connection failed.</span>
+            <button
+              onClick={onRetry}
+              className="flex items-center gap-1 text-xs underline hover:no-underline"
+            >
+              <RefreshCw className="size-3" />
+              Retry
+            </button>
+          </div>
         )}
         <div ref={bottomRef} />
       </div>

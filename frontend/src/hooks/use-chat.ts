@@ -7,8 +7,10 @@ export function useChat() {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [status, setStatus] = useState<ChatStatus>("idle");
   const conversationIdRef = useRef<string | null>(null);
+  const lastUserTextRef = useRef<string>("");
 
   const sendMessage = useCallback(async (text: string) => {
+    lastUserTextRef.current = text;
     const userMessage: ChatMessage = {
       id: crypto.randomUUID(),
       role: "user",
@@ -137,10 +139,19 @@ export function useChat() {
     }
   }, []);
 
+  const retry = useCallback(() => {
+    const text = lastUserTextRef.current;
+    if (!text) return;
+    // Remove the last two messages (user message + error assistant placeholder)
+    setMessages((prev) => prev.slice(0, -2));
+    sendMessage(text);
+  }, [sendMessage]);
+
   return {
     messages,
     status,
     conversationId: conversationIdRef.current,
     sendMessage,
+    retry,
   };
 }
