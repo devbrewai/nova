@@ -20,16 +20,16 @@ const categoryConfig: Record<
   TransactionCategory,
   { icon: FeatherIcon; color: string }
 > = {
-  food:          { icon: Coffee,      color: "bg-orange-100 text-orange-700" },
-  transport:     { icon: Navigation,  color: "bg-blue-100 text-blue-700" },
-  shopping:      { icon: ShoppingBag, color: "bg-pink-100 text-pink-700" },
-  entertainment: { icon: Film,        color: "bg-purple-100 text-purple-700" },
-  bills:         { icon: FileText,    color: "bg-gray-100 text-gray-700" },
-  income:        { icon: TrendingUp,  color: "bg-green-100 text-green-700" },
-  transfer:      { icon: Shuffle,     color: "bg-gray-100 text-gray-700" },
-  health:        { icon: Heart,       color: "bg-red-100 text-red-700" },
-  travel:        { icon: Map,         color: "bg-sky-100 text-sky-700" },
-  subscriptions: { icon: Tv,          color: "bg-indigo-100 text-indigo-700" },
+  food: { icon: Coffee, color: "bg-primary/10 text-primary" },
+  transport: { icon: Navigation, color: "bg-primary/10 text-primary" },
+  shopping: { icon: ShoppingBag, color: "bg-primary/10 text-primary" },
+  entertainment: { icon: Film, color: "bg-primary/10 text-primary" },
+  bills: { icon: FileText, color: "bg-primary/10 text-primary" },
+  income: { icon: TrendingUp, color: "bg-primary/10 text-primary" },
+  transfer: { icon: Shuffle, color: "bg-primary/10 text-primary" },
+  health: { icon: Heart, color: "bg-primary/10 text-primary" },
+  travel: { icon: Map, color: "bg-primary/10 text-primary" },
+  subscriptions: { icon: Tv, color: "bg-primary/10 text-primary" },
 };
 
 function formatDate(dateStr: string): string {
@@ -53,12 +53,16 @@ export function TransactionItem({ transaction }: { transaction: Transaction }) {
 
   return (
     <div className="flex items-center gap-4 px-5 py-4 hover:bg-muted/50 transition-colors cursor-pointer">
-      <div className={`flex size-10 shrink-0 items-center justify-center rounded-full ${config.color}`}>
+      <div
+        className={`flex size-10 shrink-0 items-center justify-center rounded-full ${config.color}`}
+      >
         <Icon size={18} />
       </div>
 
       <div className="flex-1 min-w-0">
-        <p className="truncate text-sm font-semibold text-foreground">{transaction.merchant}</p>
+        <p className="truncate text-sm font-semibold text-foreground">
+          {transaction.merchant}
+        </p>
         <p className="text-sm text-muted-foreground mt-0.5">
           {formatDate(transaction.date)}
           {transaction.description ? ` • ${transaction.description}` : ""}
@@ -75,7 +79,9 @@ export function TransactionItem({ transaction }: { transaction: Transaction }) {
         </span>
         {transaction.status !== "completed" && (
           <Badge
-            variant={transaction.status === "pending" ? "secondary" : "destructive"}
+            variant={
+              transaction.status === "pending" ? "secondary" : "destructive"
+            }
             className="text-[10px] px-1.5 py-0 uppercase tracking-wider font-semibold"
           >
             {transaction.status}
