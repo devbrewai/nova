@@ -1,6 +1,7 @@
 import logging
 from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
+from datetime import timedelta
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
@@ -11,6 +12,7 @@ from app.services.conversation import ConversationManager
 from app.services.embedding import get_openai_client
 from app.services.ingestion import ingest
 from app.services.llm import get_anthropic_client
+from app.services.rate_limiter import RateLimiter
 from app.services.vector_store import get_collection
 
 logger = logging.getLogger(__name__)
@@ -33,6 +35,10 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
     app.state.collection = collection
     app.state.anthropic_client = get_anthropic_client()
     app.state.conversation_manager = ConversationManager()
+    app.state.rate_limiter = RateLimiter(
+        limit=settings.chat_rate_limit,
+        window=timedelta(hours=1),
+    )
 
     yield
 

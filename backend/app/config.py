@@ -12,6 +12,7 @@ class Settings(BaseSettings):
     knowledge_base_dir: str = "./data/knowledge_base"
     cors_origins: str = "http://localhost:5173"
     log_level: str = "INFO"
+    chat_rate_limit: int = 5
 
     model_config = {"env_file": ".env"}
 

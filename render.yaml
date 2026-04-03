@@ -16,3 +16,5 @@ services:
         sync: false
       - key: LOG_LEVEL
         value: INFO
+      - key: CHAT_RATE_LIMIT
+        value: "5"
