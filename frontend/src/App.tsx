@@ -7,7 +7,7 @@ function HomePage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold">Welcome back, Alex</h1>
+        <h1 className="font-heading text-3xl font-semibold tracking-tight">Welcome back, Alex</h1>
         <p className="mt-1 text-sm text-muted-foreground">
           Here's what's happening with your account.
         </p>
@@ -21,7 +21,7 @@ function HomePage() {
 function PlaceholderPage({ title }: { title: string }) {
   return (
     <div>
-      <h1 className="text-2xl font-bold">{title}</h1>
+      <h1 className="font-heading text-3xl font-semibold tracking-tight">{title}</h1>
       <p className="mt-1 text-sm text-muted-foreground">Coming soon</p>
     </div>
   );
