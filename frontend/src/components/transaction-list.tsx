@@ -10,10 +10,10 @@ export function TransactionList() {
   return (
     <Card>
       <CardHeader className="flex-row items-center justify-between space-y-0 pb-4">
-        <CardTitle className="text-base font-semibold">
+        <CardTitle className="font-heading text-base font-semibold">
           Recent Transactions
         </CardTitle>
-        <Button variant="link" size="sm" className="text-xs">
+        <Button variant="link" size="sm" className="text-xs text-primary hover:text-accent">
           View all
         </Button>
       </CardHeader>
