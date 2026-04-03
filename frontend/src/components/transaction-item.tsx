@@ -1,33 +1,35 @@
+import type { ComponentType } from "react";
 import {
-  UtensilsCrossed,
-  Car,
+  Coffee,
+  Navigation,
   ShoppingBag,
-  Gamepad2,
-  Receipt,
+  Film,
+  FileText,
   TrendingUp,
-  ArrowLeftRight,
+  Shuffle,
   Heart,
-  Plane,
+  Map,
   Tv,
-  type LucideIcon,
-} from "lucide-react";
+} from "react-feather";
 import { Badge } from "@/components/ui/badge";
 import type { Transaction, TransactionCategory } from "@/types";
 
+type FeatherIcon = ComponentType<{ size?: number; className?: string }>;
+
 const categoryConfig: Record<
   TransactionCategory,
-  { icon: LucideIcon; color: string }
+  { icon: FeatherIcon; color: string }
 > = {
-  food: { icon: UtensilsCrossed, color: "bg-orange-100 text-orange-600" },
-  transport: { icon: Car, color: "bg-blue-100 text-blue-600" },
-  shopping: { icon: ShoppingBag, color: "bg-purple-100 text-purple-600" },
-  entertainment: { icon: Gamepad2, color: "bg-pink-100 text-pink-600" },
-  bills: { icon: Receipt, color: "bg-slate-100 text-slate-600" },
-  income: { icon: TrendingUp, color: "bg-emerald-100 text-emerald-600" },
-  transfer: { icon: ArrowLeftRight, color: "bg-cyan-100 text-cyan-600" },
-  health: { icon: Heart, color: "bg-red-100 text-red-600" },
-  travel: { icon: Plane, color: "bg-indigo-100 text-indigo-600" },
-  subscriptions: { icon: Tv, color: "bg-amber-100 text-amber-600" },
+  food:          { icon: Coffee,      color: "bg-primary/10 text-primary" },
+  transport:     { icon: Navigation,  color: "bg-primary/10 text-primary" },
+  shopping:      { icon: ShoppingBag, color: "bg-primary/10 text-primary" },
+  entertainment: { icon: Film,        color: "bg-primary/10 text-primary" },
+  bills:         { icon: FileText,    color: "bg-muted text-muted-foreground" },
+  income:        { icon: TrendingUp,  color: "bg-primary/10 text-primary" },
+  transfer:      { icon: Shuffle,     color: "bg-muted text-muted-foreground" },
+  health:        { icon: Heart,       color: "bg-primary/10 text-primary" },
+  travel:        { icon: Map,         color: "bg-primary/10 text-primary" },
+  subscriptions: { icon: Tv,          color: "bg-muted text-muted-foreground" },
 };
 
 function formatDate(dateStr: string): string {
@@ -55,8 +57,8 @@ export function TransactionItem({ transaction }: TransactionItemProps) {
 
   return (
     <div className="flex items-center gap-3 py-3">
-      <div className={`flex size-9 shrink-0 items-center justify-center rounded-lg ${config.color}`}>
-        <Icon className="size-4" />
+      <div className={`flex size-9 shrink-0 items-center justify-center rounded-md ${config.color}`}>
+        <Icon size={16} />
       </div>
 
       <div className="flex-1 min-w-0">
@@ -78,7 +80,7 @@ export function TransactionItem({ transaction }: TransactionItemProps) {
         )}
         <span
           className={`text-sm font-medium tabular-nums ${
-            isIncome ? "text-emerald-600" : "text-foreground"
+            isIncome ? "text-primary" : "text-foreground"
           }`}
         >
           {formatAmount(transaction.amount)}
