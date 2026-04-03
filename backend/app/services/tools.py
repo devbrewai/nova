@@ -1,6 +1,7 @@
 """Tool calling service for LLM agent tools."""
 
 import json
+import re
 from pathlib import Path
 from typing import Any
 
@@ -18,12 +19,15 @@ def transaction_lookup(query: str) -> str:
     transactions = _load_json("transactions.json")
     query_lower = query.lower()
 
+    # Extract numeric amounts from query (handles "$47.99", "47.99", etc.)
+    amounts_in_query = re.findall(r"\d+\.\d+", query_lower)
+
     matches = [
         txn
         for txn in transactions
         if query_lower in txn["merchant"].lower()
         or query_lower in txn.get("description", "").lower()
-        or query_lower in str(txn["amount"])
+        or any(amt in str(abs(txn["amount"])) for amt in amounts_in_query)
     ]
 
     if not matches:
