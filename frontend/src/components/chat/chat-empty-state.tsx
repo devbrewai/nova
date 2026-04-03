@@ -1,4 +1,3 @@
-import { Bot } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const SUGGESTED_PROMPTS = [
@@ -15,11 +14,8 @@ interface ChatEmptyStateProps {
 export function ChatEmptyState({ onPromptClick }: ChatEmptyStateProps) {
   return (
     <div className="flex flex-1 flex-col items-center justify-center gap-4 px-6 text-center">
-      <div className="flex size-12 items-center justify-center rounded-full bg-primary/10">
-        <Bot className="size-6 text-primary" />
-      </div>
       <div>
-        <h3 className="text-sm font-semibold">Hi, I'm Nova!</h3>
+        <h3 className="text-sm font-semibold">Ask Nova anything</h3>
         <p className="mt-1 text-xs text-muted-foreground">
           I can help with your NovaPay account, transactions, and more.
         </p>
