@@ -46,7 +46,7 @@ export function AccountSummary() {
               <p className="text-sm font-bold text-muted-foreground uppercase tracking-wider">
                 US Dollar
               </p>
-              <Badge variant="secondary" className="font-semibold px-2.5 py-0.5">
+              <Badge variant="secondary" className="px-4 py-1 text-xs">
                 {mockAccount.tier}
               </Badge>
             </div>
