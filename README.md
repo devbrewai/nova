@@ -83,6 +83,68 @@ flowchart LR
 
 <!-- TODO(assets): static dashboard screenshot — same scene as final frame of hero GIF (Nova dashboard with chat panel open showing a complete conversation). Save as nova-dashboard.png at repo root. Embed: ![Nova dashboard with chat panel](nova-dashboard.png) -->
 
+## Project structure
+
+```
+nova/
+├── backend/                          FastAPI + RAG pipeline + Anthropic Claude
+│   ├── app/
+│   │   ├── main.py                   App init, lifespan hooks, KB ingestion on startup
+│   │   ├── config.py                 Pydantic Settings (API keys, model, paths, limits)
+│   │   ├── routers/
+│   │   │   ├── chat.py               POST /api/chat (SSE streaming)
+│   │   │   ├── account.py            GET  /api/account (mock user)
+│   │   │   ├── transactions.py       GET  /api/transactions (mock data)
+│   │   │   └── health.py             GET  /api/health
+│   │   ├── services/
+│   │   │   ├── llm.py                Claude client, system prompt, tool schemas
+│   │   │   ├── chat_orchestrator.py  RAG → LLM → tool loop → SSE event yielder
+│   │   │   ├── retrieval.py          Vector search + threshold filter
+│   │   │   ├── embedding.py          OpenAI text-embedding-3-small
+│   │   │   ├── vector_store.py       ChromaDB collection (`nova_kb`)
+│   │   │   ├── chunker.py            Paragraph-aware chunking (~400 tok, 1-para overlap)
+│   │   │   ├── ingestion.py          KB load → chunk → embed → store pipeline
+│   │   │   ├── knowledge_base.py     Markdown loader for `data/knowledge_base/`
+│   │   │   ├── tools.py              transaction_lookup, account_info, escalate_to_human
+│   │   │   ├── conversation.py       In-memory 20-msg sliding window, 30-min TTL
+│   │   │   ├── rate_limiter.py       IP-based, 5 msg/hr default
+│   │   │   └── email.py              Resend integration for escalations
+│   │   ├── models/                   Pydantic request/response schemas
+│   │   └── data/
+│   │       ├── account.json          Mock "Alex Rivera" profile
+│   │       └── transactions.json     Mock transaction history
+│   ├── data/knowledge_base/          36 markdown KB articles (account, cards, transfers…)
+│   ├── tests/                        ~100 pytest tests covering routes, RAG, tools, flows
+│   ├── pyproject.toml
+│   ├── Dockerfile                    Render deployment
+│   └── .env.example
+│
+├── frontend/                         React 19 + Vite + Tailwind + Base UI
+│   ├── src/
+│   │   ├── App.tsx                   Page router (home / transactions / cards / settings)
+│   │   ├── main.tsx                  React entry point
+│   │   ├── components/
+│   │   │   ├── sidebar.tsx           Collapsible nav
+│   │   │   ├── account-summary.tsx   Balance card with animated counter
+│   │   │   ├── balance-chart.tsx     Recharts visualization
+│   │   │   ├── transaction-list.tsx  Date-grouped transaction feed
+│   │   │   ├── chat-trigger.tsx      Floating "Ask Nova" button
+│   │   │   ├── chat/                 Chat panel, message list, input, tool status, etc.
+│   │   │   └── ui/                   shadcn-style primitives (button, card, badge…)
+│   │   ├── hooks/use-chat.ts         SSE consumer + chat state machine
+│   │   ├── services/api.ts           Backend fetch client
+│   │   ├── data/                     Frontend mock data (account, transactions)
+│   │   └── types/                    Shared TypeScript interfaces
+│   ├── package.json
+│   └── vite.config.ts
+│
+├── render.yaml                       Render service definition (backend)
+├── README.md                         You are here
+├── CLAUDE.md                         Workflow and conventions for Claude Code sessions
+├── PRD.md                            Original product requirements
+└── LICENSE                           MIT
+```
+
 ## Quick start
 
 ### Backend
