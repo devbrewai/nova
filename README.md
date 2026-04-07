@@ -31,52 +31,27 @@ A React dashboard renders the mock neobank UI and an "Ask Nova" floating chat bu
 
 ### How the AI agent works
 
-```mermaid
-flowchart LR
-    subgraph Frontend["React Frontend"]
-        UI["Chat Widget<br/>'Ask Nova'"]
-    end
-
-    subgraph Gateway["Gateway"]
-        direction TB
-        Chat["POST /api/chat"]
-        RL["Rate Limiter<br/><sub>5 msg/hr per IP</sub>"]
-        Conv["Conversation Manager<br/><sub>20-msg window · 30-min TTL</sub>"]
-        Chat --> RL --> Conv
-    end
-
-    subgraph RAG["RAG Pipeline"]
-        direction TB
-        Embed["Embed Query<br/><sub>text-embedding-3-small</sub>"]
-        Search["Vector Search<br/><sub>top 3 chunks</sub>"]
-        Ctx["Build Context<br/><sub>inject into prompt</sub>"]
-        Embed --> Search --> Ctx
-    end
-
-    subgraph Tools["Tool Router"]
-        direction TB
-        T1["transaction_lookup"]
-        T2["account_info"]
-        T3["escalate_to_human"]
-    end
-
-    LLM["Claude Sonnet 4<br/><sub>streaming</sub>"]
-
-    subgraph Ingestion["KB Ingestion <sub>(startup)</sub>"]
-        direction TB
-        MD["36 Markdown files"]
-        Chunk["Chunk + Embed"]
-        VDB["ChromaDB<br/><sub>nova_kb</sub>"]
-        MD --> Chunk --> VDB
-    end
-
-    UI -- "user message" --> Chat
-    Conv --> RAG
-    Ctx --> LLM
-    LLM -- "tool call" --> Tools
-    Tools -- "result" --> LLM
-    LLM -- "SSE stream" --> UI
-    VDB -. "serves vectors" .-> Search
+```
+┌────────────────────────────────────────────────────────────────────────────────────────────────┐
+│  Nova                                                                                          │
+│                                                                                                │
+│   "Where did                                                                                   │
+│    I spend          ┌──────────┐    SSE      ┌──────────────┐    RAG      ┌──────────────┐     │
+│    the most  ─────► │          │ ──────────► │   Backend    │ ──────────► │     LLM      │     │
+│    last             │   Chat   │             │              │             │ (Sonnet 4.6) │     │
+│    month?"          │  widget  │ ◄────────── │  rate limit  │ ◄────────── │   streaming  │     │
+│                     │          │   tokens    │  + history   │  top 3 ctx  │  + tool use  │     │
+│                     └──────────┘             └──────────────┘             └──────┬───────┘     │
+│                                                     │                            │             │
+│                                                     │ embed query                │ tool calls  │
+│                                                     ▼                            ▼             │
+│                                             ┌──────────────┐             ┌────────────────┐    │
+│                                             │  Knowledge   │             │     Tools      │    │
+│                                             │     base     │             │ • txn lookup   │    │
+│                                             │              │             │ • account info │    │
+│                                             │  36 KB docs  │             │ • escalate     │    │
+│                                             └──────────────┘             └────────────────┘    │
+└────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 **Flow:** User sends a message → rate limiter checks → conversation history is loaded → the RAG pipeline embeds the query and retrieves relevant knowledge base chunks from ChromaDB → retrieved context is injected into the system prompt → Claude generates a response, optionally calling tools (transaction lookup, account info, or escalation) → the response streams back to the chat widget as SSE events.
