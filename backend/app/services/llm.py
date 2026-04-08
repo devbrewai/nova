@@ -51,6 +51,28 @@ TOOLS: list[anthropic.types.ToolParam] = [
         },
     },
     {
+        "name": "recent_transactions",
+        "description": (
+            "List the user's most recent transactions in reverse "
+            "chronological order. Use when the user asks 'what was my "
+            "last transaction', 'show me my recent transactions', or "
+            "any prompt that wants a list rather than a search for a "
+            "specific charge."
+        ),
+        "input_schema": {
+            "type": "object",
+            "properties": {
+                "limit": {
+                    "type": "integer",
+                    "description": (
+                        "How many recent transactions to return. "
+                        "Defaults to 5 if omitted."
+                    ),
+                },
+            },
+        },
+    },
+    {
         "name": "account_info",
         "description": (
             "Retrieve the current user's account information including "

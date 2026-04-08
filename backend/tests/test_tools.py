@@ -4,6 +4,7 @@ from app.services.tools import (
     account_info,
     escalate_to_human,
     execute_tool,
+    recent_transactions,
     transaction_lookup,
 )
 
@@ -29,6 +30,42 @@ def test_transaction_lookup_limits_to_five() -> None:
     result = transaction_lookup("completed")
     lines = [line for line in result.strip().split("\n") if line.startswith("-")]
     assert len(lines) <= 5
+
+
+def test_recent_transactions_default_limit() -> None:
+    result = recent_transactions()
+    lines = [line for line in result.strip().split("\n") if line.startswith("-")]
+    assert len(lines) == 5
+    for line in lines:
+        # Format: "- YYYY-MM-DD | merchant | $amount | status"
+        assert line.count("|") == 3
+        assert "$" in line
+
+
+def test_recent_transactions_custom_limit() -> None:
+    result = recent_transactions(limit=3)
+    lines = [line for line in result.strip().split("\n") if line.startswith("-")]
+    assert len(lines) == 3
+
+
+def test_recent_transactions_sorted_descending_by_date() -> None:
+    result = recent_transactions(limit=10)
+    lines = [line for line in result.strip().split("\n") if line.startswith("-")]
+    # Extract date (second token after the leading "- ")
+    dates = [line.split("|")[0].strip("- ").strip() for line in lines]
+    assert dates == sorted(dates, reverse=True)
+
+
+def test_execute_tool_recent_transactions() -> None:
+    result = execute_tool("recent_transactions", {})
+    lines = [line for line in result.strip().split("\n") if line.startswith("-")]
+    assert len(lines) == 5
+
+
+def test_execute_tool_recent_transactions_with_limit() -> None:
+    result = execute_tool("recent_transactions", {"limit": 2})
+    lines = [line for line in result.strip().split("\n") if line.startswith("-")]
+    assert len(lines) == 2
 
 
 def test_account_info_returns_profile() -> None:

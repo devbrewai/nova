@@ -42,6 +42,20 @@ def transaction_lookup(query: str) -> str:
     return "\n".join(lines)
 
 
+def recent_transactions(limit: int = 5) -> str:
+    """Return the most recent transactions sorted by date descending."""
+    transactions = _load_json("transactions.json")
+    sorted_txns = sorted(transactions, key=lambda t: t["date"], reverse=True)
+
+    lines = []
+    for txn in sorted_txns[:limit]:
+        lines.append(
+            f"- {txn['date']} | {txn['merchant']} | "
+            f"${abs(txn['amount']):.2f} | {txn['status']}"
+        )
+    return "\n".join(lines)
+
+
 def account_info() -> str:
     """Return the current user's account information."""
     account = _load_json("account.json")
@@ -68,6 +82,9 @@ def execute_tool(name: str, tool_input: dict[str, Any]) -> str:
     """Dispatch a tool call to the correct function."""
     if name == "transaction_lookup":
         return transaction_lookup(tool_input["query"])
+    if name == "recent_transactions":
+        limit = tool_input.get("limit", 5)
+        return recent_transactions(limit=int(limit))
     if name == "account_info":
         return account_info()
     if name == "escalate_to_human":
