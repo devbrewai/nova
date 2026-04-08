@@ -9,7 +9,10 @@ interface ChatMessageProps {
   isStreaming?: boolean;
 }
 
-export function ChatMessage({ message, isStreaming = false }: ChatMessageProps) {
+export function ChatMessage({
+  message,
+  isStreaming = false,
+}: ChatMessageProps) {
   const isUser = message.role === "user";
   const showMeta = !isStreaming && message.content !== "";
   const metaClasses =
@@ -19,7 +22,7 @@ export function ChatMessage({ message, isStreaming = false }: ChatMessageProps) 
     <div className="group flex flex-col animate-in fade-in slide-in-from-bottom-2 duration-300">
       {isUser ? (
         <div className="ml-auto max-w-[85%] mt-2">
-          <div className="rounded-2xl rounded-tr-sm bg-primary/10 text-foreground px-4 py-2.5 text-sm leading-relaxed shadow-sm">
+          <div className="rounded-2xl rounded-tr-sm bg-primary/20 text-foreground px-4 py-2 text-sm leading-relaxed">
             <p className="whitespace-pre-wrap font-medium">{message.content}</p>
           </div>
           {showMeta && (
