@@ -5,6 +5,7 @@ import type { ChatMessage, ChatStatus, SSEEvent } from "@/types";
 
 const TYPEWRITER_TICK_MS = 16;
 const TYPEWRITER_CATCHUP_DIVISOR = 30;
+const TYPEWRITER_FINISH_BURST_MULTIPLIER = 3;
 
 export function useChat() {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
@@ -59,10 +60,15 @@ export function useChat() {
 
       if (!assistantId) return;
 
-      const charsThisTick = Math.max(
+      // Once the LLM stream is done, burst-drain the remaining buffer faster
+      // so the loading state doesn't linger after generation completes.
+      const baseChars = Math.max(
         1,
         Math.ceil(buffer.length / TYPEWRITER_CATCHUP_DIVISOR),
       );
+      const charsThisTick = streamFinishedRef.current
+        ? baseChars * TYPEWRITER_FINISH_BURST_MULTIPLIER
+        : baseChars;
       const slice = buffer.slice(0, charsThisTick);
       pendingTextRef.current = buffer.slice(charsThisTick);
 
