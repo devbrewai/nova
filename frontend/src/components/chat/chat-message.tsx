@@ -14,7 +14,7 @@ export function ChatMessage({ message }: ChatMessageProps) {
     <div className="flex flex-col animate-in fade-in slide-in-from-bottom-2 duration-300">
       {isUser ? (
         <div className="ml-auto max-w-[85%] mt-2">
-          <div className="rounded-2xl rounded-tr-sm bg-accent text-accent-foreground px-4 py-2.5 text-sm leading-relaxed shadow-sm">
+          <div className="rounded-2xl rounded-tr-sm bg-primary/10 text-foreground px-4 py-2.5 text-sm leading-relaxed shadow-sm">
             <p className="whitespace-pre-wrap font-medium">{message.content}</p>
           </div>
         </div>
