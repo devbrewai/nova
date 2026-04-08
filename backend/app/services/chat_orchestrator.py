@@ -21,6 +21,7 @@ from app.services.context import format_context
 from app.services.conversation import Conversation
 from app.services.llm import TOOLS, build_system_prompt
 from app.services.retrieval import retrieve
+from app.services.text import strip_emojis
 from app.services.tools import execute_tool
 
 logger = logging.getLogger(__name__)
@@ -69,7 +70,10 @@ def orchestrate_chat(
             ) as stream:
                 for event in stream:
                     if event.type == "text":
-                        yield {"type": "text_delta", "content": event.text}
+                        yield {
+                            "type": "text_delta",
+                            "content": strip_emojis(event.text),
+                        }
 
                 final_message = stream.get_final_message()
 
@@ -85,7 +89,7 @@ def orchestrate_chat(
 
             # If no tool use, we're done
             if not tool_use_blocks:
-                full_text = "".join(text_parts)
+                full_text = strip_emojis("".join(text_parts))
                 conversation.add_message("assistant", full_text)
                 yield {"type": "done"}
                 return

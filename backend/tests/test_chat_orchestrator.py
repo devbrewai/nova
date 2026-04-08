@@ -4,6 +4,7 @@ import anthropic.types
 
 from app.services.chat_orchestrator import orchestrate_chat
 from app.services.conversation import Conversation
+from app.services.text import strip_emojis
 from tests._anthropic_stream import make_anthropic_client
 
 
@@ -98,3 +99,24 @@ def test_orchestrate_error_yields_error_event(mock_retrieve: Mock) -> None:
     events = list(orchestrate_chat("test", conv, Mock(), Mock(), Mock()))
 
     assert events[0]["type"] == "error"
+
+
+@patch("app.services.chat_orchestrator.retrieve")
+def test_orchestrate_strips_emojis_from_streamed_text(mock_retrieve: Mock) -> None:
+    mock_retrieve.return_value = []
+    client = make_anthropic_client(
+        _make_text_response("Hi Alex! 👋 Your balance is $12,847.32. ✨")
+    )
+
+    conv = Conversation()
+    events = list(orchestrate_chat("hi", conv, client, Mock(), Mock()))
+
+    text_deltas = [e["content"] for e in events if e["type"] == "text_delta"]
+    assert text_deltas, "expected at least one text_delta event"
+    for content in text_deltas:
+        assert strip_emojis(content) == content, f"emoji leaked into delta: {content!r}"
+
+    stored = conv.get_messages()[-1]["content"]
+    assert strip_emojis(stored) == stored, f"emoji leaked into history: {stored!r}"
+    assert "Hi Alex!" in stored
+    assert "$12,847.32" in stored
