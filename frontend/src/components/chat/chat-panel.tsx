@@ -11,8 +11,9 @@ interface ChatPanelProps {
 }
 
 export function ChatPanel({ open, onClose }: ChatPanelProps) {
-  const { messages, status, sendMessage, retry } = useChat();
+  const { messages, status, sendMessage, retry, resetConversation } = useChat();
   const panelRef = useRef<HTMLDivElement>(null);
+  const hasMessages = messages.length > 0;
 
   // Close on Escape
   useEffect(() => {
@@ -54,7 +55,11 @@ export function ChatPanel({ open, onClose }: ChatPanelProps) {
             : "pointer-events-none scale-95 opacity-0 md:translate-y-4",
         )}
       >
-        <ChatHeader onClose={onClose} />
+        <ChatHeader
+          title={hasMessages ? "Chat with Nova" : "New conversation"}
+          onClose={onClose}
+          onNewConversation={hasMessages ? resetConversation : undefined}
+        />
         <ChatMessageList
           messages={messages}
           status={status}
