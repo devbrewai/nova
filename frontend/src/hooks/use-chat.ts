@@ -4,7 +4,7 @@ import { sendChatMessage } from "@/services/api";
 import type { ChatMessage, ChatStatus, SSEEvent } from "@/types";
 
 const TYPEWRITER_TICK_MS = 16;
-const TYPEWRITER_CATCHUP_DIVISOR = 30;
+const TYPEWRITER_CATCHUP_DIVISOR = 60;
 const TYPEWRITER_FINISH_BURST_MULTIPLIER = 3;
 
 export function useChat() {
