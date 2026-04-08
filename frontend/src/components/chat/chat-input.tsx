@@ -36,7 +36,7 @@ export function ChatInput({ onSend, status }: ChatInputProps) {
           value={value}
           onChange={(e) => setValue(e.target.value)}
           onKeyDown={handleKeyDown}
-          placeholder="Ask Nova anything..."
+          placeholder="Ask anything..."
           disabled={disabled}
           rows={1}
           className="max-h-32 min-h-[40px] w-full resize-none bg-transparent px-3 py-2.5 text-sm font-medium placeholder:text-muted-foreground focus:outline-none disabled:opacity-50"
