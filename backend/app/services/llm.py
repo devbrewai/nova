@@ -1,11 +1,7 @@
-"""LLM service for Claude streaming with tool use."""
-
-from collections.abc import Iterator
-from typing import Any
+"""LLM service for Claude with tool use."""
 
 import anthropic
 import httpx
-from anthropic.types import MessageParam
 
 from app.config import settings
 
@@ -106,32 +102,3 @@ def build_system_prompt(context: str) -> str:
     return SYSTEM_PROMPT_TEMPLATE.format(context=context)
 
 
-def create_response(
-    client: anthropic.Anthropic,
-    messages: list[MessageParam],
-    system_prompt: str,
-) -> anthropic.types.Message:
-    """Create a non-streaming response from Claude with tool use."""
-    return client.messages.create(
-        model=settings.anthropic_model,
-        max_tokens=1024,
-        system=system_prompt,
-        messages=messages,
-        tools=TOOLS,
-    )
-
-
-def stream_response(
-    client: anthropic.Anthropic,
-    messages: list[MessageParam],
-    system_prompt: str,
-) -> Iterator[Any]:
-    """Stream a response from Claude with tool use support."""
-    with client.messages.stream(
-        model=settings.anthropic_model,
-        max_tokens=1024,
-        system=system_prompt,
-        messages=messages,
-        tools=TOOLS,
-    ) as stream:
-        yield from stream
