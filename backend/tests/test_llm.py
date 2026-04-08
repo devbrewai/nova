@@ -25,6 +25,14 @@ def test_system_prompt_forbids_emojis() -> None:
     assert "emoji" in prompt.lower()
 
 
+def test_system_prompt_routes_transaction_tools() -> None:
+    prompt = build_system_prompt("")
+
+    assert "recent_transactions" in prompt
+    assert "spending_summary" in prompt
+    assert "transaction_lookup" in prompt
+
+
 def test_tools_have_required_fields() -> None:
     for tool in TOOLS:
         assert "name" in tool
