@@ -41,9 +41,10 @@ export function ChatMessageList({
             <ChatMessage key={msg.id} message={msg} isStreaming={isStreaming} />
           );
         })}
-        {status === "streaming" && messages[messages.length - 1]?.content === "" && (
-          <TypingIndicator />
-        )}
+        {(status === "streaming" || status === "tool_calling") &&
+          messages[messages.length - 1]?.content === "" && (
+            <TypingIndicator phase={status} />
+          )}
         {status === "error" && messages.length > 0 && (
           <div className="flex items-center gap-2 rounded-lg border border-destructive/30 bg-destructive/10 px-3 py-2 text-sm text-destructive animate-in fade-in duration-200">
             <AlertCircle size={16} className="shrink-0" />
