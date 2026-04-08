@@ -25,7 +25,9 @@ dev = [
 [tool.pytest.ini_options]
 markers = [
     "integration: requires OPENAI_API_KEY and real ChromaDB (skip with -m 'not integration')",
+    "live: hits the real Anthropic API; requires ANTHROPIC_API_KEY (run with -m live)",
 ]
+addopts = "-m 'not integration and not live'"
 
 [tool.ruff]
 target-version = "py311"
