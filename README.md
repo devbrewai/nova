@@ -2,7 +2,7 @@
 
 AI-powered customer support agent embedded in a neobank dashboard. Built by [Devbrew](https://devbrew.ai).
 
-<!-- TODO(assets): hero GIF — capture ~6s loop of dashboard load + chat trigger click + suggested-prompt selection + tool-use indicator + streaming response. Save as nova-demo.gif at repo root. Embed: ![Nova in action](nova-demo.gif) -->
+![Nova in action](assets/nova-demo.gif)
 
 **[Try the live demo →](https://nova.devbrew.ai)**
 
@@ -56,7 +56,7 @@ A React dashboard renders the mock neobank UI and an "Ask Nova" floating chat bu
 
 **Flow:** User sends a message → rate limiter checks → conversation history is loaded → the RAG pipeline embeds the query and retrieves relevant knowledge base chunks from ChromaDB → retrieved context is injected into the system prompt → Claude generates a response, optionally calling tools (transaction lookup, account info, or escalation) → the response streams back to the chat widget as SSE events.
 
-<!-- TODO(assets): static dashboard screenshot — same scene as final frame of hero GIF (Nova dashboard with chat panel open showing a complete conversation). Save as nova-dashboard.png at repo root. Embed: ![Nova dashboard with chat panel](nova-dashboard.png) -->
+![Nova dashboard with chat panel](assets/nova-dashboard.png)
 
 ## Project structure
 
